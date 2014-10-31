@@ -177,6 +177,19 @@ struct trait_name                                                               
      static const bool value = false;                                                                                   \
    };                                                                                                                   \
                                                                                                                         \
+   template <typename Result>                                                                                           \
+   struct impl<true, Result(void)>                                                                                      \
+   {                                                                                                                    \
+     static typename is_call_possible_detail::add_reference<derived_type>::type test_me;                                \
+                                                                                                                        \
+     static const bool value =                                                                                          \
+       sizeof(                                                                                                          \
+            return_value_check<T, Result>::deduce(                                                                      \
+             (test_me.member_function_name(arg), is_call_possible_detail::void_exp_result<T>())                         \
+                         )                                                                                              \
+            ) == sizeof(yes);                                                                                           \
+   };                                                                                                                   \
+                                                                                                                        \
    template <typename Result, typename Arg>                                                                             \
    struct impl<true, Result(Arg)>                                                                                       \
    {                                                                                                                    \
