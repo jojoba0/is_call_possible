@@ -11,6 +11,9 @@ DEFINE_IS_CALL_POSSIBLE(is_call_possible, operator())
 // define a trait to check for the possibility of calling baz on a given type
 DEFINE_IS_CALL_POSSIBLE(is_baz_possible, baz);
 
+// define a trait to check for the possibility of calling kapow on a given type
+DEFINE_IS_CALL_POSSIBLE(is_kapow_possible, kapow);
+
 // test cases
 struct foo 
 { 
@@ -28,6 +31,11 @@ struct bar : foo
    float baz(std::vector<int>)
    {
      return 13;
+   }
+   
+   int kapow()
+   {
+     return 42; 
    }
 };
 
@@ -68,6 +76,12 @@ int main()
 
   // bar::baz can't be called with std::list<int>
   assert((!is_baz_possible<bar, float(std::list<int>)>::value));
+  
+  // foo has no kapow member function
+  assert((!is_kapow_possible<foo, int()>::value));
+  
+  // bar has a kapow member function
+  assert((is_kapow_possible<bar, int()>::value));
   
   return 0;
 } 
